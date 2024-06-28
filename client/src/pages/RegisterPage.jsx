@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.scss"
 
@@ -26,20 +26,17 @@ const RegisterPage = () => {
 
   const [passwordMatch, setPasswordMatch] = useState(true)
 
+  useEffect(() => {
+
+    setPasswordMatch(formData.password === formData.confirmPassword || formData.confirmPassword === "")
+  })
+
   const naviagate = useNavigate()
 
 
   const handleSubmit = async (e) => {
 
     e.preventDefault()
-
-    if (formData.password === formData.confirmPassword) {
-
-      setPasswordMatch(true)
-    }
-    else {
-      setPasswordMatch(false)
-    }
 
     try {
 

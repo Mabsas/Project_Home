@@ -23,6 +23,8 @@ app.use("/auth",authRoutes)
 const PORT = 3001;
 mongoose
 .connect(process.env.MONGO_URL, {
+
+  dbName: "Home_Sweet_Home",
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
