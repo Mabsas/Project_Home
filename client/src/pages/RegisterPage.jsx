@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Register.scss"
 
 const RegisterPage = () => {
@@ -22,10 +23,50 @@ const RegisterPage = () => {
   }
 
   console.log(formData)
+
+  const [passwordMatch, setPasswordMatch] = useState(true)
+
+  const naviagate = useNavigate()
+
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault()
+
+    if (formData.password === formData.confirmPassword) {
+
+      setPasswordMatch(true)
+    }
+    else {
+      setPasswordMatch(false)
+    }
+
+    try {
+
+      const register_form = new FormData()
+
+      for (var key in formData) {
+        register_form.append(key, formData[key])
+      }
+
+      const response = await fetch("http://localhost:3001/auth/register", {
+        method: "POST",
+        body: register_form
+      })
+
+      if (response.ok) {
+        naviagate("/login")
+      }
+    } catch (err) {
+
+      console.log("Registration Failed", err.message)
+    }
+  }
+
   return (
     <div className="register">
       <div className="register_content">
-        <form className="register_content_form">
+        <form className="register_content_form" onSubmit={handleSubmit}>
           <input
             placeholder="First Name"
             name="firstName"
@@ -64,6 +105,11 @@ const RegisterPage = () => {
             type="password"
             required
           />
+
+
+          {!passwordMatch && (
+            <p style={{color: "red" }}>Passwords are not matched!</p>
+          )}
           <input
             id="image"
             type="file"
@@ -85,7 +131,7 @@ const RegisterPage = () => {
             />
           )}
 
-          <button type='submit'>REGISTER</button>
+          <button type="submit" disabled = {!passwordMatch}>REGISTER</button>
         </form>
         <a href="/login">Already have an account ? Log in Here</a>
       </div>
